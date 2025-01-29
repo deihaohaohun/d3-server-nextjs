@@ -1,0 +1,34 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+model Area {
+  id    String @id @default(auto()) @map("_id") @db.ObjectId
+  title String @unique
+}
+
+model Content {
+  id      String @id @default(auto()) @map("_id") @db.ObjectId
+  areaId  String @db.ObjectId
+  content String
+  title   String @unique
+}
+
+model Video {
+  id         String    @id @default(auto()) @map("_id") @db.ObjectId
+  cover      String?
+  createdAt  DateTime  @db.Date
+  /// Multiple data types found: Int: 84.3%, BigInt: 15.7% out of 115 sampled entries
+  current    Json
+  finishedAt DateTime? @db.Date
+  status     String
+  title      String    @unique
+  /// Multiple data types found: Int: 84.3%, BigInt: 15.7% out of 115 sampled entries
+  total      Json
+  type       String
+}
