@@ -10,14 +10,23 @@ export async function GET(
   const searchParams = request.nextUrl.searchParams;
   const page = searchParams.get("page") || "1";
   const take = searchParams.get("take") || "20";
+
   const videos = await prisma.video.findMany({
     where: { status },
     orderBy: { finishedAt: "desc" },
     skip: (parseInt(page) - 1) * parseInt(take),
     take: parseInt(take),
   });
+
+  const total = await prisma.video.count({
+    where: { status },
+  });
+
   return Response.json({
-    data: videos,
+    data: {
+      rows: videos,
+      total,
+    },
     code: 200,
     status: "success",
   });
